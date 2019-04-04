@@ -11,9 +11,9 @@ BFILE* bstart(FILE* f, const char* mode){
 	B->f = f;
 	B->decal = 0;
 	B->mode = malloc((strlen(mode)+1)*sizeof(char));
-	strcpy(B.mode,mode);
-	if((mode[0]==r)||(mode[1]==r)){
-		fread(bf->buff,8,1,f);
+	strcpy(B->mode,mode);
+	if((mode[0] == 'r') || (mode[1] == 'r')){
+		fread(B->buff,8,1,f);
 	}
 	return B;
 }
@@ -56,10 +56,10 @@ int bitwrite(BFILE* bf, char bit){
 		bf->decal=0;
 	}
 	if(bit){
-		bf->buff |= (1<<(7-decal));
+		bf->buff |= (1<<(7-bf->decal));
 	}
 	else{
-		bf->buff &= ~(1<<(7-decal));
+		bf->buff &= ~(1<<(7-bf->decal));
 	}
 	bf->decal++;
 	return 0;
