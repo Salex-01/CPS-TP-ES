@@ -9,10 +9,9 @@ BFILE* bstart(FILE* f, const char* mode){
 	}
 	BFILE* B = malloc(sizeof(BFILE));
 	B->f = f;
-	B->decal = 0;
+	B->decal = 8;
 	B->mode = malloc((strlen(mode)+1)*sizeof(char));
 	strcpy(B.mode,mode);
-	fscanf(f,"%c",&B->buff);
 	return B;
 }
 
@@ -20,8 +19,8 @@ int bstop(BFILE* bf){
 	if(bf==NULL){
 		return 0;
 	}
-	if((bf->decal!=0)&&((bf->mode[0]=='w')||(bf->mode[1]=='w'))){
-		for(;bf->decal<8;bf->decal++){
+	if((bf->decal!=8)&&((bf->mode[0]=='w')||(bf->mode[1]=='w'))){
+		while(bf->decal<8){
 			bitwrite(bf,0);
 		}
 	}
