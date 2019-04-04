@@ -38,10 +38,6 @@ char bitread(BFILE *bf){
     return (b >> 7 - bf->decal) & 1;
 }
 
-int main(){
-    return 0;
-}
-
 int bitwrite(BFILE* bf, char bit){
 	//TODO
 }
