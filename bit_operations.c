@@ -27,8 +27,19 @@ int bstop(BFILE* bf){
 	return 0;
 }
 
-char bitread(BFILE* bf){
-	//TODO
+char bitread(BFILE *bf){
+    char b = fgetc(bf->f);
+    if(b == EOF)
+        return -1;
+    if(bf->decal < 7)
+        fseek(bf->f, -1, SEEK_CUR);
+    else
+        bf->decal = 0;
+    return (b >> 7 - bf->decal) & 1;
+}
+
+int main(){
+    return 0;
 }
 
 int bitwrite(BFILE* bf, char bit){
