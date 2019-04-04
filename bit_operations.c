@@ -42,7 +42,7 @@ char bitread(BFILE *bf){
 		fread(&bf->buff,1,1,bf->f);
 		bf->decal = 0;
 	}
-	if(bf->buff == EOF){
+	if(feof(bf->f)){
 		return -1;
 	}
 	bf->decal++;
@@ -53,10 +53,6 @@ int bitwrite(BFILE* bf, char bit){
 	if(bf->f == NULL){
 		return -1;
 	}
-	if(bf->decal==8){
-		fwrite(&bf->buff,1,1,bf->f);
-		bf->decal=0;
-	}
 	if(bit){
 		bf->buff |= (1<<(7-bf->decal));
 	}
@@ -64,6 +60,10 @@ int bitwrite(BFILE* bf, char bit){
 		bf->buff &= ~(1<<(7-bf->decal));
 	}
 	bf->decal++;
+	if(bf->decal==8){
+		fwrite(&bf->buff,1,1,bf->f);
+		bf->decal=0;
+	}
 	return 0;
 }
 
