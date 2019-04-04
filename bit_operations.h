@@ -1,6 +1,8 @@
 typedef struct a{
 	FILE* f;
-	int decal;
+	char decal;
+	char* mode;
+	char buff;
 }BFILE, BFILE*;
 
 BFILE* bstart(FILE* f, const char* mode);
