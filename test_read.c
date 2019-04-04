@@ -1,4 +1,4 @@
-#include "bfile.h"
+#include "bit_operations.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -6,7 +6,7 @@ int main()
 {
   BFILE *bfichier;
   int bit;
- 
+
   bfichier = bstart(stdin,"r");
   if (bfichier == NULL)
     {

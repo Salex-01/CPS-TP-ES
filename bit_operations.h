@@ -1,9 +1,12 @@
+#include <stdio.h>
+#include <stdlib.h>
+
 typedef struct a{
 	FILE* f;
 	char decal;
 	char* mode;
 	char buff;
-}BFILE, BFILE*;
+}BFILE;
 
 BFILE* bstart(FILE* f, const char* mode);
 
