@@ -12,6 +12,7 @@ BFILE* bstart(FILE* f, const char* mode){
 	B->decal = 0;
 	B->mode = malloc((strlen(mode)+1)*sizeof(char));
 	strcpy(B.mode,mode);
+	fscanf(f,"%c",&B->buff);
 	return B;
 }
 
@@ -20,7 +21,9 @@ int bstop(BFILE* bf){
 		return 0;
 	}
 	if((bf->decal!=0)&&((bf->mode[0]=='w')||(bf->mode[1]=='w'))){
-		fprintf(bf->f,"%c",bf->buff);
+		for(;bf->decal<8;bf->decal++){
+			bitwrite(bf,0);
+		}
 	}
 	free(bf->mode);
 	free(bf);
@@ -28,14 +31,17 @@ int bstop(BFILE* bf){
 }
 
 char bitread(BFILE *bf){
-    char b = fgetc(bf->f);
-    if(b == EOF)
-        return -1;
-    if(bf->decal < 7)
-        fseek(bf->f, -1, SEEK_CUR);
-    else
-        bf->decal = 0;
-    return (b >> 7 - bf->decal) & 1;
+	char b = fgetc(bf->f);
+	if(b == EOF){
+		return -1;
+	}
+	if(bf->decal < 7){
+		fseek(bf->f, -1, SEEK_CUR);
+	}
+	else{
+		bf->decal = 0;
+	}
+	return (b >> 7 - bf->decal) & 1;
 }
 
 int bitwrite(BFILE* bf, char bit){
