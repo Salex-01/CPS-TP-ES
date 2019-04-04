@@ -46,12 +46,12 @@ char bitread(BFILE *bf){
 int bitwrite(BFILE* bf, char bit){
     if(bf->f == NULL)
         return -1;
-    bf->buff &= (0 << 8-bf->decal);
-	bf->buff |= (bit & 1) << 8-bf->decal;
+    bf->buff &= (0 << 7-bf->decal);
+	bf->buff |= (bit & 1) << 7-bf->decal;
     bf->decal++;
-    if(bf->decal == 8){
+    if(bf->decal == 7){
         fputc(bf->f, bf->buff);
-        bf->decal = 1;
+        bf->decal = 0;
     }
     return 0;
 }
