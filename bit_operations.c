@@ -31,19 +31,24 @@ char bitread(BFILE *bf){
     char b = fgetc(bf->f);
     if(b == EOF)
         return -1;
-    if(bf->decal < 7)
+    if(bf->decal < 8)
         fseek(bf->f, -1, SEEK_CUR);
     else
-        bf->decal = 0;
-    return (b >> 7 - bf->decal) & 1;
-}
-
-int main(){
-    return 0;
+        bf->decal = 1;
+    return (b >> 8 - bf->decal) & 1;
 }
 
 int bitwrite(BFILE* bf, char bit){
-	//TODO
+    if(bf->f == NULL)
+        return -1;
+    bf->buff &= (0 << 8-bf->decal);
+	bf->buff |= (bit & 1) << 8-bf->decal;
+    bf->decal++;
+    if(bf->decal == 8){
+        fputc(bf->f, bf->buff);
+        bf->decal = 1;
+    }
+    return 0;
 }
 
 int beof(BFILE* bf){
