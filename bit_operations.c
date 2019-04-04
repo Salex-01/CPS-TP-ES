@@ -36,7 +36,9 @@ char bitread(BFILE *bf){
 		return -1;
 	}
 	if(bf->decal==8){
-		fwrite(&bf->buff,1,1,bf->f);
+		if((bf->mode[0]=='w')||(bf->mode[1]=='w')){
+			fwrite(&bf->buff,1,1,bf->f);
+		}
 		fread(&bf->buff,1,1,bf->f);
 		bf->decal = 0;
 	}
