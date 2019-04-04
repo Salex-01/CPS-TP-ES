@@ -13,7 +13,7 @@ BFILE* bstart(FILE* f, const char* mode){
 	B->mode = malloc((strlen(mode)+1)*sizeof(char));
 	strcpy(B->mode,mode);
 	if((mode[0] == 'r') || (mode[1] == 'r')){
-		fread(B->buff,1,1,f);
+		fread(&B->buff,1,1,f);
 	}
 	return B;
 }
@@ -25,7 +25,7 @@ int bstop(BFILE* bf){
 	while(bf->decal!=8){
 		bitwrite(bf,0);
 	}
-	fwrite(bf->buff,1,1,bf->f);
+	fwrite(&bf->buff,1,1,bf->f);
 	free(bf->mode);
 	free(bf);
 	return 0;
@@ -36,8 +36,8 @@ char bitread(BFILE *bf){
 		return -1;
 	}
 	if(bf->decal==8){
-		fwrite(bf->buff,1,1,bf->f);
-		fread(bf->buff,1,1,bf->f);
+		fwrite(&bf->buff,1,1,bf->f);
+		fread(&bf->buff,1,1,bf->f);
 		bf->decal = 0;
 	}
 	if(bf->buff == EOF){
@@ -52,7 +52,7 @@ int bitwrite(BFILE* bf, char bit){
 		return -1;
 	}
 	if(bf->decal==8){
-		fwrite(bf->buff,1,1,bf->f);
+		fwrite(&bf->buff,1,1,bf->f);
 		bf->decal=0;
 	}
 	if(bit){
