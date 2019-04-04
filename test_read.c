@@ -2,12 +2,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int main(){
-	FILE* f = fopen("read.txt","r");
+int main(int argc, char* argv[]){
 	BFILE *bfichier;
 	int bit;
-
-	bfichier = bstart(f,"r");
+	if(argc!=1){
+		FILE* f = fopen(argv[1],"r");
+		bfichier = bstart(f,"r");
+	}
+	else{
+		bfichier = bstart(stdin,"r");
+	}
 	if (bfichier == NULL){
 		fprintf(stderr,"Erreur d'ouverture d'acces binaire en lecture\n");
 		exit(3);
