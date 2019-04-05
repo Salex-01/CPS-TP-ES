@@ -22,10 +22,15 @@ int bstop(BFILE* bf){
 	if(bf==NULL){
 		return 0;
 	}
-	while(bf->decal!=8){
+	if(bf->decal!=8){
+		char echap = 255;
+		char d = bf->decal;
+		fwrite(&echap,1,1,bf->f);
+		fwrite(&d,1,1,bf->f);
+	}
+	while(bf->decal!=8){		
 		bitwrite(bf,0);
 	}
-	fwrite(&bf->buff,1,1,bf->f);
 	free(bf->mode);
 	free(bf);
 	return 0;
@@ -61,6 +66,9 @@ int bitwrite(BFILE* bf, char bit){
 	}
 	bf->decal++;
 	if(bf->decal==8){
+		if(bf->buff==255){
+			fwrite(&bf->buff,1,1,bf->f);
+		}
 		fwrite(&bf->buff,1,1,bf->f);
 		bf->decal=0;
 	}
