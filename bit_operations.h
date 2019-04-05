@@ -6,6 +6,7 @@ typedef struct a{
 	char decal;
 	char* mode;
 	char buff;
+	char l2r;
 }BFILE;
 
 BFILE* bstart(FILE* f, const char* mode);

@@ -4,7 +4,7 @@
 
 int main(int argc, char* argv[]){
 	BFILE *bfichier;
-	int bit;
+	char bit;
 	if(argc!=1){
 		FILE* f = fopen(argv[1],"r");
 		bfichier = bstart(f,"r");
@@ -17,7 +17,7 @@ int main(int argc, char* argv[]){
 		exit(3);
 	}
 	bit = bitread(bfichier);
-	while (!beof(bfichier)){
+	while (bit!=-1){
 		switch (bit){
 		case 0:
 			printf("0");
