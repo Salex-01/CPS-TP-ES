@@ -7,7 +7,7 @@ do
     ./test_write <sequence >coded_sequence
     ./test_read <coded_sequence >decoded_sequence
 
-    cat sequence
+	cat decoded_sequence
 
     if diff decoded_sequence sequence >/dev/null
     then
