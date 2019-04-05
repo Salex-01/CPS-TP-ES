@@ -13,16 +13,18 @@ BFILE* bstart(FILE* f, const char* mode){
 	B->mode = malloc((strlen(mode)+1)*sizeof(char));
 	strcpy(B->mode,mode);
 	B->l2r = 42;
-	if((mode[0] == 'r') || (mode[1] == 'r')){
-		fread(&B->buff,1,1,f);
-		if(B->buff==(char)(0xFF)){
+	if(!feof(f)){
+		if((mode[0] == 'r') || (mode[1] == 'r')){
 			fread(&B->buff,1,1,f);
-			if(B->buff!=(char)(0xFF)){
-				if(B->buff==0){
-					return NULL;
-				}
-				B->l2r = B->buff;
+			if(B->buff==(char)(0xFF)){
 				fread(&B->buff,1,1,f);
+				if(B->buff!=(char)(0xFF)){
+					if(B->buff==0){
+						return NULL;
+					}
+					B->l2r = B->buff;
+					fread(&B->buff,1,1,f);
+				}
 			}
 		}
 	}
@@ -100,4 +102,16 @@ int bitwrite(BFILE* bf, char bit){
 
 int beof(BFILE* bf){
 	return(bitread(bf)==-1);
+}
+
+int get_bit(int32_t v, int p){
+	return((v>>p)&1);
+}
+
+int32_t clr_bit(int32_t v, int p){
+	return(v & ~(1<<p));
+}
+
+int32_t set_bit(int32_t v, int p){
+	return(v | (1<<p));
 }

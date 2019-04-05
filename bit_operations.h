@@ -18,3 +18,9 @@ char bitread(BFILE *fichier);
 int bitwrite(BFILE *fichier, char bit);
 
 int beof(BFILE *fichier);
+
+int get_bit(int32_t v, int p);
+
+int32_t clr_bit(int32_t v, int p);
+
+int32_t set_bit(int32_t v, int p);

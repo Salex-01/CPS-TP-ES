@@ -1,6 +1,8 @@
 #!/bin/sh
 
-echo >sequence
+echo "Error is expected when trying to open empty file"
+rm sequence
+touch sequence
 ./test_write <sequence >coded_sequence
 ./test_read <coded_sequence >decoded_sequence
 
@@ -11,10 +13,11 @@ then
     echo "Sequences differ when empty, bfile does not work"
     exit 1
 fi
+echo ""
 
 #-------------------------------------------------------------------------
 
-echo 000000000000000000>sequence
+echo "000000000000000000">sequence
 ./test_write <sequence >coded_sequence
 ./test_read <coded_sequence >decoded_sequence
 
@@ -25,10 +28,11 @@ then
     echo "Sequences differ when full of 0, bfile does not work"
     exit 1
 fi
+echo ""
 
 #-------------------------------------------------------------------------
 
-echo 1111111111111111111111111>sequence
+echo "1111111111111111111111111">sequence
 ./test_write <sequence >coded_sequence
 ./test_read <coded_sequence >decoded_sequence
 
@@ -39,6 +43,7 @@ then
     echo "Sequences differ when full of 1, bfile does not work"
     exit 1
 fi
+echo ""
 
 #-------------------------------------------------------------------------
 i=1
@@ -46,28 +51,28 @@ while [ $i -le 8 ]
 do
 	if [ $i -eq 1 ]
 	then
-		echo 1 >sequence
+		echo "1" >sequence
 	elif [ $i -eq 2 ]
 	then
-		echo 01 >sequence
+		echo "01" >sequence
 	elif [ $i -eq 3 ]
 	then
-		echo 110 >sequence
+		echo "110" >sequence
 	elif [ $i -eq 4 ]
 	then
-		echo 0101 >sequence
+		echo "0101" >sequence
 	elif [ $i -eq 5 ]
 	then
-		echo 00101 >sequence
+		echo "00101" >sequence
 	elif [ $i -eq 6 ]
 	then
-		echo 011011 >sequence
+		echo "011011" >sequence
 	elif [ $i -eq 7 ]
 	then
-		echo 1101001 >sequence
+		echo "1101001" >sequence
 	elif [ $i -eq 8 ]
 	then
-		echo 11010110 >sequence
+		echo "11010110" >sequence
 	fi
     ./test_write <sequence >coded_sequence
     ./test_read <coded_sequence >decoded_sequence
@@ -82,3 +87,5 @@ do
         exit 1
     fi
 done
+echo ""
+echo "Looks good"
