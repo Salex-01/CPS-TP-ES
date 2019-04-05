@@ -12,8 +12,19 @@ BFILE* bstart(FILE* f, const char* mode){
 	B->decal = 0;
 	B->mode = malloc((strlen(mode)+1)*sizeof(char));
 	strcpy(B->mode,mode);
+	B->l2r = 42;
 	if((mode[0] == 'r') || (mode[1] == 'r')){
 		fread(&B->buff,1,1,f);
+		if(B->buff==(char)(0xFF)){
+			fread(&B->buff,1,1,f);
+			if(B->buff!=(char)(0xFF)){
+				if(B->buff==0){
+					return NULL;
+				}
+				B->l2r = B->buff;
+				fread(&B->buff,1,1,f);
+			}
+		}
 	}
 	return B;
 }
@@ -22,14 +33,14 @@ int bstop(BFILE* bf){
 	if(bf==NULL){
 		return 0;
 	}
-	if(bf->decal!=8){
-		char echap = 255;
-		char d = bf->decal;
-		fwrite(&echap,1,1,bf->f);
-		fwrite(&d,1,1,bf->f);
-	}
-	while(bf->decal!=8){		
-		bitwrite(bf,0);
+	char echap = (char)(0xFF);
+	char d = bf->decal;
+	fwrite(&echap,1,1,bf->f);
+	fwrite(&d,1,1,bf->f);
+	if(bf->mode[0]=='w'){
+		while(bf->decal!=0){
+			bitwrite(bf,0);
+		}
 	}
 	free(bf->mode);
 	free(bf);
@@ -41,16 +52,28 @@ char bitread(BFILE *bf){
 		return -1;
 	}
 	if(bf->decal==8){
-		if((bf->mode[0]=='w')||(bf->mode[1]=='w')){
-			fwrite(&bf->buff,1,1,bf->f);
-		}
 		fread(&bf->buff,1,1,bf->f);
+		if(bf->buff==(char)(0xFF)){
+			fread(&bf->buff,1,1,bf->f);
+			if(bf->buff!=(char)(0xFF)){
+				if(bf->buff==0){
+					return -1;
+				}
+				bf->l2r = bf->buff;
+				fread(&bf->buff,1,1,bf->f);
+			}
+		}
 		bf->decal = 0;
 	}
-	if(feof(bf->f)){
-		return -1;
-	}
 	bf->decal++;
+	if(bf->l2r!=42){
+		if(bf->decal<=bf->l2r){
+			return ((bf->buff >> (8-bf->decal)) & 1);
+		}
+		else{
+			return -1;
+		}
+	}
 	return ((bf->buff >> (8-bf->decal)) & 1);
 }
 
@@ -66,7 +89,7 @@ int bitwrite(BFILE* bf, char bit){
 	}
 	bf->decal++;
 	if(bf->decal==8){
-		if(bf->buff==255){
+		if(bf->buff==(char)(0xFF)){
 			fwrite(&bf->buff,1,1,bf->f);
 		}
 		fwrite(&bf->buff,1,1,bf->f);
